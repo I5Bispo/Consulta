@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Planos - Vivo</title>
+    
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #0d021f; /* Fundo roxo bem escuro tecnológico */
+            color: #333333; 
+            padding: 20px; 
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Camada do Mapa do Brasil Desfocado no Fundo */
+        .mapa-fundo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Substituído por uma silhueta de mapa/tecnologia em tom sutil e desfocado */
+            background: radial-gradient(circle at center, rgba(102, 0, 153, 0.25) 0%, rgba(13, 2, 31, 0.9) 70%),
+                        url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+            filter: blur(8px); /* Deixa o fundo completamente desfocado */
+            transform: scale(1.1);
+            z-index: 1;
+        }
+
+        /* Animação das Linhas de Fibras Ópticas Andando */
+        .fibra-animada {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(45deg, rgba(153, 204, 51, 0.15) 1px, transparent 1px),
+                linear-gradient(-45deg, rgba(188, 19, 254, 0.15) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: moverFibras 15s linear infinite;
+        }
+
+        @keyframes moverFibras {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        /* Caixa do Formulário (Fica acima das animações) */
+        #form-consulta {
+            position: relative;
+            z-index: 3;
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 30px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7); 
+            border-top: 5px solid #660099; 
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-width: 130px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #660099; 
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        label { 
+            font-weight: 600; 
+            margin-top: 15px; 
+            display: block; 
+            color: #555555; 
+            font-size: 14px;
+        }
+
+        input[type="text"], select { 
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 8px; 
+            box-sizing: border-box; 
+            background: #FAFAFA; 
+            border: 1px solid #CCCCCC; 
+            border-radius: 4px; 
+            color: #333333;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #660099; 
+            box-shadow: 0 0 5px rgba(102, 0, 153, 0.3);
+            background: #FFFFFF;
+        }
+
+        .radio-group { 
+            margin-top: 10px; 
+            margin-bottom: 5px; 
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-group label { 
+            display: inline; 
+            font-weight: normal; 
+            margin: 0; 
+            cursor: pointer; 
+            color: #333333;
+        }
+
+        button { 
+            width: 100%; 
+            background-color: #99CC33; 
+            color: #222222; 
+            border: none; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin-top: 30px; 
+            padding: 15px; 
+            font-weight: bold; 
+            border-radius: 4px; 
+            transition: 0.3s;
+        }
+
+        button:hover { 
+            background-color: #82B600; 
+        }
+
+        option {
+            background-color: #FFFFFF;
+            color: #333333;
+        }
+
+        #caixa-vivo-play, #caixa-vivo-fibra {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Elementos visuais de fundo -->
+    <div class="mapa-fundo"></div>
+    <div class="fibra-animada"></div>
+
+    <form id="form-consulta">
+        <div class="logo-container">
+            <img src="https://logodownload.org/wp-content/uploads/2014/02/vivo-logo-0.png" alt="Logo Vivo">
+        </div>
+        
+        <h2>Solicitação de Consulta</h2>
+        
+        <label for="nome">Nome Completo / Razão Social:</label>
+        <input type="text" id="nome" required>
+
+        <label>Tipo de Documento:</label>
+        <div class="radio-group">
+            <input type="radio" id="tipo-cpf" name="tipoDoc" value="CPF" checked>
+            <label for="tipo-cpf">Pessoa Física (CPF)</label>
+            
+            <input type="radio" id="tipo-cnpj" name="tipoDoc" value="CNPJ">
+            <label for="tipo-cnpj">Pessoa Jurídica (CNPJ)</label>
+        </div>
+
+        <label for="documento" id="label-documento">Número do CPF:</label>
+        <input type="text" id="documento" required>
+
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco" required>
+
+        <label for="telefone">Telefone (Fixo):</label>
+        <input type="text" id="telefone">
+
+        <label for="celular">Celular (WhatsApp):</label>
+        <input type="text" id="celular" required>
+
+        <label for="servico">Serviço Desejado:</label>
+        <select id="servico" required>
+            <option value="">Selecione o serviço...</option>
+            <option value="Vivo Fibra">Vivo Fibra (Internet)</option>
+            <option value="Vivo Play">Vivo Play (TV)</option>
+        </select>
+
+        <div id="caixa-vivo-fibra">
+            <label for="pacote-fibra">Escolha o plano de Internet:</label>
+            <select id="pacote-fibra">
+                <!-- Preenchido pelo JavaScript -->
+            </select>
+        </div>
+
+        <div id="caixa-vivo-play">
+            <label for="pacote-play">Escolha o pacote de TV:</label>
+            <select id="pacote-play">
+                <option value="">Selecione uma opção...</option>
+                <option value="Vivo Play TV Avançado - R$ 170,00/MÊS">Vivo Play TV Avançado - R$ 170,00</option>
+                <option value="Vivo Play TV Completo - R$ 295,00/MÊS">Vivo Play TV Completo - R$ 295,00</option>
+            </select>
+        </div>
+
+        <button type="submit">Enviar para o WhatsApp</button>
+    </form>
+
+    <script>
+        const planosFibraCPF = [
+            "600 MEGAS - 100,00/MES",
+            "700 MEGAS - 150,00/MES",
+            "1 GIGA - 200,00/MES"
+        ];
+
+        const planosFibraCNPJ = [
+            "700 MEGAS - 100,00/MES",
+            "1 GIGA - 200,00/MES",
+            "2 GIGA - 300,00/MES",
+            "10 GIGA - 2000,00/MES"
+        ];
+
+        const radiosTipoDoc = document.getElementsByName('tipoDoc');
+        const labelDocumento = document.getElementById('label-documento');
+        const inputDocumento = document.getElementById('documento');
+        
+        const selectServico = document.getElementById('servico');
+        const caixaVivoFibra = document.getElementById('caixa-vivo-fibra');
+        const selectPacoteFibra = document.getElementById('pacote-fibra');
+        const caixaVivoPlay = document.getElementById('caixa-vivo-play');
+        const selectPacotePlay = document.getElementById('pacote-play');
+
+        function atualizarPlanosFibra() {
+            let tipoSelecionado = document.querySelector('input[name="tipoDoc"]:checked').value;
+            let planos = (tipoSelecionado === 'CPF') ? planosFibraCPF : planosFibraCNPJ;
+            
+            selectPacoteFibra.innerHTML = '<option value="">Selecione a velocidade...</option>';
+            planos.forEach(plano => {
+                let option = document.createElement('option');
+                option.value = plano;
+                option.textContent = plano;
+                selectPacoteFibra.appendChild(option);
+            });
+        }
+
+        radiosTipoDoc.forEach(radio => {
+            radio.addEventListener('change', function() {
+                labelDocumento.textContent = (this.value === 'CPF') ? 'Número do CPF:' : 'Número do CNPJ:';
+                inputDocumento.value = ''; 
+                atualizarPlanosFibra(); 
+            });
+        });
+
+        selectServico.addEventListener('change', function() {
+            caixaVivoFibra.style.display = 'none';
+            selectPacoteFibra.required = false;
+            caixaVivoPlay.style.display = 'none';
+            selectPacotePlay.required = false;
+
+            if (this.value === 'Vivo Fibra') {
+                caixaVivoFibra.style.display = 'block';
+                selectPacoteFibra.required = true;
+                atualizarPlanosFibra(); 
+            } 
+            else if (this.value === 'Vivo Play') {
+                caixaVivoPlay.style.display = 'block';
+                selectPacotePlay.required = true;
+            }
+        });
+
+        const inputTelefone = document.getElementById('telefone');
+        const inputCelular = document.getElementById('celular');
+
+        function aplicarMascaraTelefone(value) {
+            if (!value) return "";
+            value = value.replace(/\D/g, ''); 
+            value = value.replace(/(\d{2})(\d)/, "($1) $2"); 
+            value = value.replace(/(\d)(\d{4})$/, "$1-$2"); 
+            return value;
+        }
+
+        function aplicarMascaraDoc(value, tipo) {
+            value = value.replace(/\D/g, '');
+            if (tipo === 'CPF') {
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            } else {
+                value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            }
+            return value;
+        }
+
+        inputTelefone.addEventListener('input', function(e) { e.target.value = aplicarMascaraTelefone(e.target.value); });
+        inputCelular.addEventListener('input', function(e) { e.target.value = aplicarMascaraTelefone(e.target.value); });
+        inputDocumento.addEventListener('input', function(e) {
+            let tipo = document.querySelector('input[name="tipoDoc"]:checked').value;
+            e.target.value = aplicarMascaraDoc(e.target.value, tipo);
+        });
+
+        document.getElementById('form-consulta').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const tipoSelecionado = document.querySelector('input[name="tipoDoc"]:checked').value;
+            const nome = document.getElementById('nome').value;
+            const documento = document.getElementById('documento').value;
+            const endereco = document.getElementById('endereco').value;
+            const telefone = document.getElementById('telefone').value;
+            const celular = document.getElementById('celular').value;
+            
+            let produtoInteresse = selectServico.value;
+            if (produtoInteresse === 'Vivo Fibra') {
+                produtoInteresse = "Vivo Fibra: " + selectPacoteFibra.value; 
+            } else if (produtoInteresse === 'Vivo Play') {
+                produtoInteresse = selectPacotePlay.value; 
+            }
+
+            const mensagem = `🚀 *NOVA CONSULTA - VIVO* 🚀\n\n` +
+                             `👤 *Cliente:* ${nome}\n` +
+                             `📋 *Tipo:* ${tipoSelecionado}\n` +
+                             `📄 *Documento:* ${documento}\n` +
+                             `📍 *Endereço:* ${endereco}\n` +
+                             `📱 *WhatsApp:* ${celular}\n` +
+                             `☎️ *Fixo:* ${telefone || 'Não informado'}\n\n` +
+                             `⭐ *Interesse:* ${produtoInteresse}`;
+
+            const seuNumero = "5511900000000"; 
+
+            const urlWhatsApp = `https://wa.me/${seuNumero}?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWhatsApp, '_blank');
+        });
+    </script>
+
+</body>
+</html>
