@@ -243,7 +243,7 @@
             </div>
             <div>
                 <label for="tel2">📱 Tel 2 (Contato):</label>
-                <!-- ATENÇÃO: O 'required' foi removido aqui embaixo -->
+                <!-- CAMPO 100% OPCIONAL (Sem required) -->
                 <input type="text" id="tel2">
             </div>
         </div>
@@ -468,8 +468,8 @@
                            `🏠 *Complemento:* ${comp}\n\n` +
                            `📱 *Tel1:* ${tel1}\n`;
                 
-                // Se o usuário preencheu o Tel2, ele é incluído, senão a linha é omitida
-                if (tel2) {
+                // Só adiciona a linha do Tel2 se o usuário realmente digitar algo
+                if (tel2 && tel2.trim() !== "") {
                     mensagem += `📱 *Tel2:* ${tel2}\n`;
                 }
 
@@ -490,7 +490,7 @@
                            `🏠 *Complemento:* ${comp}\n\n` +
                            `📱 *Tel1:* ${tel1}\n`;
 
-                if (tel2) {
+                if (tel2 && tel2.trim() !== "") {
                     mensagem += `📱 *Tel2:* ${tel2}\n`;
                 }
 
@@ -500,7 +500,7 @@
                             `📸 *ATENÇÃO:* Lembre-se de anexar a foto FRENTE e VERSO do RG ou CNH do representante legal nesta conversa!`;
             }
 
-            const seuNumero = "5511969731382"; 
+            const seuNumero = "5511954873871"; 
             const urlWhatsApp = `https://wa.me/${seuNumero}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWhatsApp, '_blank');
         });
