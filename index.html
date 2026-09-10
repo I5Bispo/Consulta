@@ -21,7 +21,6 @@
             position: relative;
         }
 
-        /* 1. Mapa do Brasil desfocado no fundo */
         .mapa-fundo {
             position: absolute;
             top: 0;
@@ -36,7 +35,6 @@
             z-index: 1;
         }
 
-        /* 3. Caixa do Formulário */
         #form-consulta {
             position: relative;
             z-index: 3;
@@ -51,7 +49,6 @@
             overflow-y: auto;
         }
 
-        /* Scrollbar customizada para o formulário */
         #form-consulta::-webkit-scrollbar { width: 8px; }
         #form-consulta::-webkit-scrollbar-thumb { background-color: #660099; border-radius: 4px; }
 
@@ -161,7 +158,6 @@
 <body>
 
     <div class="mapa-fundo"></div>
-    <div class="fibras-animadas"></div>
 
     <form id="form-consulta">
         <div class="consultor-titulo">Ilderan Barbosa - Consultor Oficial VIVO</div>
@@ -172,7 +168,6 @@
 
         <h2>Solicitação de Plano</h2>
         
-        <!-- CPF ou CNPJ -->
         <label>Tipo de Cadastro:</label>
         <div class="radio-group">
             <input type="radio" id="tipo-cpf" name="tipoDoc" value="CPF" checked>
@@ -182,16 +177,13 @@
             <label for="tipo-cnpj">Pessoa Jurídica</label>
         </div>
 
-        <!-- Alerta para CNPJ -->
         <div id="alerta-cnpj" class="alerta-cnpj">
             <strong>⚠️ Atenção (CNPJ):</strong> Prepare uma foto FRENTE e VERSO do RG ou CNH do titular para enviar no WhatsApp.
         </div>
 
-        <!-- Adicionado o maxlength 14 por padrão (tamanho do CPF com máscara) -->
         <label for="documento" id="label-documento">🧾 Número do CPF:</label>
         <input type="text" id="documento" required maxlength="14">
 
-        <!-- Campos Específicos CPF -->
         <div id="campos-cpf">
             <label for="nome">👤 Nome Completo:</label>
             <input type="text" id="nome" required>
@@ -203,13 +195,11 @@
             <input type="date" id="nascimento" required>
         </div>
 
-        <!-- Campos Específicos CNPJ (Escondido por padrão) -->
         <div id="campos-cnpj" style="display: none;">
             <label for="razao">🏢 Razão Social / Nome da Empresa:</label>
             <input type="text" id="razao">
         </div>
 
-        <!-- Endereço -->
         <div class="grid-2">
             <div>
                 <label for="cep">📭 CEP:</label>
@@ -236,7 +226,6 @@
             </div>
         </div>
 
-        <!-- Contatos -->
         <div class="grid-2">
             <div>
                 <label for="tel1">📱 Tel 1 (WhatsApp):</label>
@@ -261,7 +250,6 @@
             <option value="26">Dia 26</option>
         </select>
 
-        <!-- Serviços e Planos -->
         <label for="servico">🛜 Serviço Desejado:</label>
         <select id="servico" required>
             <option value="">Selecione a categoria...</option>
@@ -273,7 +261,6 @@
         <div id="caixa-pacote" style="display: none;">
             <label for="pacote">Escolha o Pacote:</label>
             <select id="pacote">
-                <!-- Preenchido pelo JavaScript -->
             </select>
         </div>
 
@@ -281,7 +268,6 @@
     </form>
 
     <script>
-        // TABELA DE PLANOS
         const planosFibraCPF = [
             "600MB - R$ 100,00",
             "700MB - R$ 150,00",
@@ -311,7 +297,6 @@
             "VIVO PLAY TV COMPLETO (4 Pontos - 140 Canais) - R$ 295,00"
         ];
 
-        // LÓGICA DE ALTERNÂNCIA (CPF / CNPJ)
         const radiosTipoDoc = document.getElementsByName('tipoDoc');
         const labelDoc = document.getElementById('label-documento');
         const camposCPF = document.getElementById('campos-cpf');
@@ -360,14 +345,14 @@
                     camposCNPJ.style.display = 'none';
                     alertaCNPJ.style.display = 'none';
                     optVivoTotal.style.display = 'block';
-                    inputDocumento.maxLength = 14; // Tamanho do CPF (11 números + pontuação)
+                    inputDocumento.maxLength = 14; 
                 } else {
                     labelDoc.textContent = '🧾 Número do CNPJ:';
                     camposCPF.style.display = 'none';
                     camposCNPJ.style.display = 'block';
                     alertaCNPJ.style.display = 'block';
                     optVivoTotal.style.display = 'none';
-                    inputDocumento.maxLength = 18; // Tamanho do CNPJ (14 números + pontuação)
+                    inputDocumento.maxLength = 18; 
                     
                     if (selectServico.value === 'Vivo Total') {
                         selectServico.value = '';
@@ -381,7 +366,6 @@
 
         selectServico.addEventListener('change', atualizarPacotes);
 
-        // MÁSCARAS E BUSCA DE CEP
         const inputCep = document.getElementById('cep');
         
         function aplicarMascaraTelefone(v) {
@@ -394,12 +378,12 @@
         function aplicarMascaraDoc(v, tipo) {
             v = v.replace(/\D/g, '');
             if (tipo === 'CPF') {
-                v = v.substring(0, 11); // Corta em 11 números
+                v = v.substring(0, 11); 
                 v = v.replace(/(\d{3})(\d)/, '$1.$2');
                 v = v.replace(/(\d{3})(\d)/, '$1.$2');
                 v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
             } else {
-                v = v.substring(0, 14); // Corta em 14 números
+                v = v.substring(0, 14); 
                 v = v.replace(/^(\d{2})(\d)/, '$1.$2');
                 v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
                 v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
@@ -420,7 +404,6 @@
             e.target.value = v.replace(/^(\d{5})(\d)/, '$1-$2');
         });
 
-        // Auto-completar Endereço via ViaCEP
         inputCep.addEventListener('blur', function() {
             let cep = this.value.replace(/\D/g, '');
             if (cep.length === 8) {
@@ -436,12 +419,27 @@
             }
         });
 
-        // ENVIO DO FORMULÁRIO (GERADOR DO TEMPLATE)
         document.getElementById('form-consulta').addEventListener('submit', function(event) {
             event.preventDefault(); 
 
             const tipo = document.querySelector('input[name="tipoDoc"]:checked').value;
             const doc = document.getElementById('documento').value;
+            
+            // VALIDAÇÃO DE QUANTIDADE DE NÚMEROS DO DOCUMENTO
+            const numerosDocumento = doc.replace(/\D/g, ''); // Pega apenas os números
+            
+            if (tipo === "CPF" && numerosDocumento.length < 11) {
+                alert("⚠️ Por favor, preencha o CPF completo (11 números).");
+                document.getElementById('documento').focus();
+                return; // Trava o envio
+            }
+            
+            if (tipo === "CNPJ" && numerosDocumento.length < 14) {
+                alert("⚠️ Por favor, preencha o CNPJ completo (14 números).");
+                document.getElementById('documento').focus();
+                return; // Trava o envio
+            }
+
             const cep = document.getElementById('cep').value;
             const cidade = document.getElementById('cidade').value;
             const rua = document.getElementById('rua').value;
@@ -481,7 +479,6 @@
                             `🧾 *Data de vencimento:* ${venc}\n\n` +
                             `🛜 *Pacote escolhido:* ${pacote}`;
             } else {
-                // Caso CNPJ
                 const razao = document.getElementById('razao').value;
 
                 mensagem = `🚀 🛜 *TEMPLATE DE CADASTRO VIVO FIBRA CNPJ*.\n\n` +
