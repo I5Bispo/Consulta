@@ -36,11 +36,6 @@
             z-index: 1;
         }
 
-        @keyframes fluxoFibras {
-            0% { background-position: 0 0; }
-            100% { background-position: 100px 100px; }
-        }
-
         /* 3. Caixa do Formulário */
         #form-consulta {
             position: relative;
@@ -198,13 +193,13 @@
         <!-- Campos Específicos CPF -->
         <div id="campos-cpf">
             <label for="nome">👤 Nome Completo:</label>
-            <input type="text" id="nome">
+            <input type="text" id="nome" required>
 
             <label for="mae">👵🏼 Nome da Mãe:</label>
-            <input type="text" id="mae">
+            <input type="text" id="mae" required>
 
             <label for="nascimento">🗓 Data de Nascimento:</label>
-            <input type="date" id="nascimento">
+            <input type="date" id="nascimento" required>
         </div>
 
         <!-- Campos Específicos CNPJ (Escondido por padrão) -->
@@ -248,7 +243,8 @@
             </div>
             <div>
                 <label for="tel2">📱 Tel 2 (Contato):</label>
-                <input type="text" id="tel2" required>
+                <!-- ATENÇÃO: O 'required' foi removido aqui embaixo -->
+                <input type="text" id="tel2">
             </div>
         </div>
 
@@ -362,15 +358,14 @@
                     camposCPF.style.display = 'block';
                     camposCNPJ.style.display = 'none';
                     alertaCNPJ.style.display = 'none';
-                    optVivoTotal.style.display = 'block'; // Mostra Vivo Total para CPF
+                    optVivoTotal.style.display = 'block';
                 } else {
                     labelDoc.textContent = '🧾 Número do CNPJ:';
                     camposCPF.style.display = 'none';
                     camposCNPJ.style.display = 'block';
                     alertaCNPJ.style.display = 'block';
-                    optVivoTotal.style.display = 'none'; // Oculta Vivo Total para CNPJ
+                    optVivoTotal.style.display = 'none';
                     
-                    // Se o usuário estava com Vivo Total selecionado e mudou para CNPJ, limpa a seleção
                     if (selectServico.value === 'Vivo Total') {
                         selectServico.value = '';
                         caixaPacote.style.display = 'none';
@@ -459,7 +454,7 @@
                 const nome = document.getElementById('nome').value;
                 const mae = document.getElementById('mae').value;
                 let dataNascBr = document.getElementById('nascimento').value; 
-                if (dataNascBr) dataNascBr = dataNascBr.split('-').reverse().join('/'); // Formata para DD/MM/AAAA
+                if (dataNascBr) dataNascBr = dataNascBr.split('-').reverse().join('/');
 
                 mensagem = `🚀 🛜 *TEMPLATE DE CADASTRO VIVO FIBRA CPF*.\n\n` +
                            `👤 *Nome:* ${nome}\n` +
@@ -471,12 +466,16 @@
                            `🏠 *Rua:* ${rua}\n` +
                            `🏠 *Nº:* ${num}\n` +
                            `🏠 *Complemento:* ${comp}\n\n` +
-                           `- Obrigatório 2 telefones para contato\n` +
-                           `📱 *Tel1:* ${tel1}\n` +
-                           `📱 *Tel2:* ${tel2}\n\n` +
-                           `📧 *Email:* ${email}\n` +
-                           `🧾 *Data de vencimento:* ${venc}\n\n` +
-                           `🛜 *Pacote escolhido:* ${pacote}`;
+                           `📱 *Tel1:* ${tel1}\n`;
+                
+                // Se o usuário preencheu o Tel2, ele é incluído, senão a linha é omitida
+                if (tel2) {
+                    mensagem += `📱 *Tel2:* ${tel2}\n`;
+                }
+
+                mensagem += `\n📧 *Email:* ${email}\n` +
+                            `🧾 *Data de vencimento:* ${venc}\n\n` +
+                            `🛜 *Pacote escolhido:* ${pacote}`;
             } else {
                 // Caso CNPJ
                 const razao = document.getElementById('razao').value;
@@ -489,17 +488,19 @@
                            `🏠 *Rua:* ${rua}\n` +
                            `🏠 *Nº:* ${num}\n` +
                            `🏠 *Complemento:* ${comp}\n\n` +
-                           `- Obrigatório 2 telefones para contato\n` +
-                           `📱 *Tel1:* ${tel1}\n` +
-                           `📱 *Tel2:* ${tel2}\n\n` +
-                           `📧 *Email:* ${email}\n` +
-                           `🧾 *Data de vencimento:* ${venc}\n\n` +
-                           `🛜 *Pacote escolhido:* ${pacote}\n\n` +
-                           `📸 *ATENÇÃO:* Lembre-se de anexar a foto FRENTE e VERSO do RG ou CNH do representante legal nesta conversa!`;
+                           `📱 *Tel1:* ${tel1}\n`;
+
+                if (tel2) {
+                    mensagem += `📱 *Tel2:* ${tel2}\n`;
+                }
+
+                mensagem += `\n📧 *Email:* ${email}\n` +
+                            `🧾 *Data de vencimento:* ${venc}\n\n` +
+                            `🛜 *Pacote escolhido:* ${pacote}\n\n` +
+                            `📸 *ATENÇÃO:* Lembre-se de anexar a foto FRENTE e VERSO do RG ou CNH do representante legal nesta conversa!`;
             }
 
-            // ⚠️ ATENÇÃO: Substitua os zeros abaixo pelo SEU número de WhatsApp (código do país + DDD + número)
-            const seuNumero = "5511954873871"; 
+            const seuNumero = "5511969731382"; 
             const urlWhatsApp = `https://wa.me/${seuNumero}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWhatsApp, '_blank');
         });
