@@ -187,8 +187,9 @@
             <strong>⚠️ Atenção (CNPJ):</strong> Prepare uma foto FRENTE e VERSO do RG ou CNH do titular para enviar no WhatsApp.
         </div>
 
+        <!-- Adicionado o maxlength 14 por padrão (tamanho do CPF com máscara) -->
         <label for="documento" id="label-documento">🧾 Número do CPF:</label>
-        <input type="text" id="documento" required>
+        <input type="text" id="documento" required maxlength="14">
 
         <!-- Campos Específicos CPF -->
         <div id="campos-cpf">
@@ -243,7 +244,6 @@
             </div>
             <div>
                 <label for="tel2">📱 Tel 2 (Contato):</label>
-                <!-- CAMPO 100% OPCIONAL (Sem required) -->
                 <input type="text" id="tel2">
             </div>
         </div>
@@ -321,6 +321,7 @@
         const selectPacote = document.getElementById('pacote');
         const caixaPacote = document.getElementById('caixa-pacote');
         const optVivoTotal = document.getElementById('opt-vivo-total');
+        const inputDocumento = document.getElementById('documento');
 
         function atualizarPacotes() {
             let tipoSelecionado = document.querySelector('input[name="tipoDoc"]:checked').value;
@@ -359,19 +360,21 @@
                     camposCNPJ.style.display = 'none';
                     alertaCNPJ.style.display = 'none';
                     optVivoTotal.style.display = 'block';
+                    inputDocumento.maxLength = 14; // Tamanho do CPF (11 números + pontuação)
                 } else {
                     labelDoc.textContent = '🧾 Número do CNPJ:';
                     camposCPF.style.display = 'none';
                     camposCNPJ.style.display = 'block';
                     alertaCNPJ.style.display = 'block';
                     optVivoTotal.style.display = 'none';
+                    inputDocumento.maxLength = 18; // Tamanho do CNPJ (14 números + pontuação)
                     
                     if (selectServico.value === 'Vivo Total') {
                         selectServico.value = '';
                         caixaPacote.style.display = 'none';
                     }
                 }
-                document.getElementById('documento').value = '';
+                inputDocumento.value = '';
                 atualizarPacotes();
             });
         });
@@ -391,10 +394,12 @@
         function aplicarMascaraDoc(v, tipo) {
             v = v.replace(/\D/g, '');
             if (tipo === 'CPF') {
+                v = v.substring(0, 11); // Corta em 11 números
                 v = v.replace(/(\d{3})(\d)/, '$1.$2');
                 v = v.replace(/(\d{3})(\d)/, '$1.$2');
                 v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
             } else {
+                v = v.substring(0, 14); // Corta em 14 números
                 v = v.replace(/^(\d{2})(\d)/, '$1.$2');
                 v = v.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
                 v = v.replace(/\.(\d{3})(\d)/, '.$1/$2');
@@ -468,7 +473,6 @@
                            `🏠 *Complemento:* ${comp}\n\n` +
                            `📱 *Tel1:* ${tel1}\n`;
                 
-                // Só adiciona a linha do Tel2 se o usuário realmente digitar algo
                 if (tel2 && tel2.trim() !== "") {
                     mensagem += `📱 *Tel2:* ${tel2}\n`;
                 }
@@ -500,7 +504,7 @@
                             `📸 *ATENÇÃO:* Lembre-se de anexar a foto FRENTE e VERSO do RG ou CNH do representante legal nesta conversa!`;
             }
 
-            const seuNumero = "5511969731382"; 
+            const seuNumero = "5511954873871"; 
             const urlWhatsApp = `https://wa.me/${seuNumero}?text=${encodeURIComponent(mensagem)}`;
             window.open(urlWhatsApp, '_blank');
         });
