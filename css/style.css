@@ -1,3 +1,9 @@
+:root {
+    --cor-vivo-roxo: #660099;
+    --cor-vivo-verde: #99CC33;
+    --cor-vivo-verde-hover: #82B600;
+}
+
 body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background-color: #0b0118; 
@@ -35,20 +41,20 @@ body {
     width: 100%;
     max-width: 500px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7); 
-    border-top: 5px solid #660099; 
+    border-top: 5px solid var(--cor-vivo-roxo); 
     max-height: 90vh;
     overflow-y: auto;
 }
 
 #form-consulta::-webkit-scrollbar { width: 8px; }
-#form-consulta::-webkit-scrollbar-thumb { background-color: #660099; border-radius: 4px; }
+#form-consulta::-webkit-scrollbar-thumb { background-color: var(--cor-vivo-roxo); border-radius: 4px; }
 
 .logo-container {
     text-align: center;
     margin-bottom: 10px;
     font-size: 38px; 
     font-weight: 900; 
-    color: #660099; 
+    color: var(--cor-vivo-roxo); 
     letter-spacing: -1.5px;
 }
 
@@ -62,7 +68,7 @@ body {
 
 h2 {
     text-align: center;
-    color: #660099; 
+    color: var(--cor-vivo-roxo); 
     margin-top: 0;
     margin-bottom: 20px;
     font-size: 20px;
@@ -76,7 +82,7 @@ label {
     font-size: 13px;
 }
 
-input[type="text"], input[type="email"], input[type="date"], select { 
+input[type="text"], input[type="email"], input[type="date"], input[type="tel"], select { 
     width: 100%; 
     padding: 10px; 
     margin-top: 5px; 
@@ -91,7 +97,7 @@ input[type="text"], input[type="email"], input[type="date"], select {
 }
 
 input:focus, select:focus {
-    border-color: #660099; 
+    border-color: var(--cor-vivo-roxo); 
     box-shadow: 0 0 5px rgba(102, 0, 153, 0.3);
     background: #FFFFFF;
 }
@@ -118,9 +124,13 @@ input:focus, select:focus {
     gap: 10px;
 }
 
+.span-2 {
+    grid-column: span 2;
+}
+
 button { 
     width: 100%; 
-    background-color: #99CC33; 
+    background-color: var(--cor-vivo-verde); 
     color: #222222; 
     border: none; 
     font-size: 16px; 
@@ -132,7 +142,7 @@ button {
     transition: 0.3s;
 }
 
-button:hover { background-color: #82B600; }
+button:hover { background-color: var(--cor-vivo-verde-hover); }
 
 .alerta-cnpj {
     background-color: #fff3cd;
@@ -143,4 +153,19 @@ button:hover { background-color: #82B600; }
     margin-top: 15px;
     display: none;
     border-radius: 4px;
+}
+
+/* ================= MELHORIAS MOBILE ================= */
+@media (max-width: 600px) {
+    .grid-2 {
+        grid-template-columns: 1fr; /* Muda para 1 coluna no celular */
+    }
+    
+    .span-2 {
+        grid-column: span 1; /* Ocupa apenas a coluna disponível */
+    }
+    
+    #form-consulta {
+        padding: 20px;
+    }
 }
