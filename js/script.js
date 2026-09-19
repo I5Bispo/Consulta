@@ -134,9 +134,12 @@ inputCep.addEventListener('input', e => {
     e.target.value = v.replace(/^(\d{5})(\d)/, '$1-$2');
 });
 
+// Melhoria: Tratamento de erros e feedback no ViaCEP
 inputCep.addEventListener('blur', function() {
     let cep = this.value.replace(/\D/g, '');
     if (cep.length === 8) {
+        document.getElementById('cidade').value = "Buscando...";
+        
         fetch(`https://viacep.com.br/ws/${cep}/json/`)
         .then(res => res.json())
         .then(data => {
@@ -144,10 +147,64 @@ inputCep.addEventListener('blur', function() {
                 document.getElementById('rua').value = data.logradouro;
                 document.getElementById('cidade').value = data.localidade + ' - ' + data.uf;
                 document.getElementById('numero').focus();
+            } else {
+                alert("⚠️ CEP não encontrado. Verifique o número digitado.");
+                document.getElementById('cidade').value = "";
+                document.getElementById('rua').value = "";
             }
+        })
+        .catch(error => {
+            alert("⚠️ Erro ao buscar o CEP. Digite o endereço manualmente.");
+            document.getElementById('cidade').value = "";
         });
     }
 });
+
+// Melhoria: Funções reais de validação de CPF e CNPJ
+function validarCPF(cpf) {
+    cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf == '') return false;
+    if (cpf.length != 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    let add = 0;
+    for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
+    let rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11) rev = 0;
+    if (rev != parseInt(cpf.charAt(9))) return false;
+    add = 0;
+    for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev == 10 || rev == 11) rev = 0;
+    if (rev != parseInt(cpf.charAt(10))) return false;
+    return true;
+}
+
+function validarCNPJ(cnpj) {
+    cnpj = cnpj.replace(/[^\d]+/g, '');
+    if(cnpj == '') return false;
+    if (cnpj.length != 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
+    let tamanho = cnpj.length - 2;
+    let numeros = cnpj.substring(0, tamanho);
+    let digitos = cnpj.substring(tamanho);
+    let soma = 0;
+    let pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado != digitos.charAt(0)) return false;
+    tamanho = tamanho + 1;
+    numeros = cnpj.substring(0, tamanho);
+    soma = 0;
+    pos = tamanho - 7;
+    for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+    }
+    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+    if (resultado != digitos.charAt(1)) return false;
+    return true;
+}
 
 document.getElementById('form-consulta').addEventListener('submit', function(event) {
     event.preventDefault(); 
@@ -155,19 +212,17 @@ document.getElementById('form-consulta').addEventListener('submit', function(eve
     const tipo = document.querySelector('input[name="tipoDoc"]:checked').value;
     const doc = document.getElementById('documento').value;
     
-    // VALIDAÇÃO DE QUANTIDADE DE NÚMEROS DO DOCUMENTO
-    const numerosDocumento = doc.replace(/\D/g, ''); // Pega apenas os números
-    
-    if (tipo === "CPF" && numerosDocumento.length < 11) {
-        alert("⚠️ Por favor, preencha o CPF completo (11 números).");
+    // Melhoria: Validação real do Documento
+    if (tipo === "CPF" && !validarCPF(doc)) {
+        alert("⚠️ CPF inválido. Por favor, digite um CPF válido.");
         document.getElementById('documento').focus();
-        return; // Trava o envio
+        return; 
     }
     
-    if (tipo === "CNPJ" && numerosDocumento.length < 14) {
-        alert("⚠️ Por favor, preencha o CNPJ completo (14 números).");
+    if (tipo === "CNPJ" && !validarCNPJ(doc)) {
+        alert("⚠️ CNPJ inválido. Por favor, digite um CNPJ válido.");
         document.getElementById('documento').focus();
-        return; // Trava o envio
+        return; 
     }
 
     const cep = document.getElementById('cep').value;
@@ -231,7 +286,9 @@ document.getElementById('form-consulta').addEventListener('submit', function(eve
                     `📸 *ATENÇÃO:* Lembre-se de anexar a foto FRENTE e VERSO do RG ou CNH do representante legal nesta conversa!`;
     }
 
-    const seuNumero = "5511954873871"; 
+    const seuNumero = "5511969731382"; 
     const urlWhatsApp = `https://wa.me/${seuNumero}?text=${encodeURIComponent(mensagem)}`;
-    window.open(urlWhatsApp, '_blank');
+    
+    // Melhoria: window.location.href faz a transição para o app do WhatsApp de forma mais limpa em celulares
+    window.location.href = urlWhatsApp;
 });
