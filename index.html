@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ilderan Barbosa - Consultor Oficial Premium Vivo</title>
+    <title>Ilderan Barbosa - Consultor Oficial Vivo</title>
     <meta name="description" content="Consulte e contrate planos Vivo Fibra, Vivo Total e Vivo Play diretamente pelo WhatsApp.">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -12,10 +12,10 @@
     <div class="mapa-fundo"></div>
 
     <form id="form-consulta">
-        <div class="consultor-titulo">Ilderan Barbosa - Consultor Oficial Premium VIVO</div>
+        <div class="consultor-titulo">Ilderan Barbosa - Consultor Premium Oficial VIVO</div>
 
         <div class="logo-container">
-            <span style="color: #99CC33;"></span>
+            <!-- Espaço reservado para a logo da Vivo -->
         </div>
 
         <h2>Solicitação de Plano</h2>
@@ -34,11 +34,12 @@
         </div>
 
         <label for="documento" id="label-documento">🧾 Número do CPF:</label>
-        <input type="text" id="documento" required maxlength="14">
+        <!-- Melhoria: type="tel" para abrir o teclado numérico no celular -->
+        <input type="tel" id="documento" inputmode="numeric" required maxlength="14">
 
         <div id="campos-cpf">
             <label for="nome">👤 Nome Completo:</label>
-            <input type="text" id="nome" required>
+            <input type="text" id="nome" required autocomplete="name">
 
             <label for="mae">👵🏼 Nome da Mãe:</label>
             <input type="text" id="mae" required>
@@ -55,7 +56,7 @@
         <div class="grid-2">
             <div>
                 <label for="cep">📭 CEP:</label>
-                <input type="text" id="cep" required maxlength="9" placeholder="00000-000">
+                <input type="tel" id="cep" inputmode="numeric" required maxlength="9" placeholder="00000-000" autocomplete="postal-code">
             </div>
             <div>
                 <label for="cidade">📍 Cidade:</label>
@@ -64,13 +65,14 @@
         </div>
 
         <div class="grid-2">
-            <div style="grid-column: span 2;">
+            <!-- Melhoria: Substituído o style inline por uma classe para facilitar o mobile -->
+            <div class="span-2">
                 <label for="rua">🏠 Rua:</label>
                 <input type="text" id="rua" required>
             </div>
             <div>
                 <label for="numero">🏠 Nº:</label>
-                <input type="text" id="numero" required>
+                <input type="tel" id="numero" inputmode="numeric" required>
             </div>
             <div>
                 <label for="complemento">🏠 Complemento:</label>
@@ -81,16 +83,16 @@
         <div class="grid-2">
             <div>
                 <label for="tel1">📱 Tel  (WhatsApp):</label>
-                <input type="text" id="tel1" required>
+                <input type="tel" id="tel1" inputmode="numeric" required autocomplete="tel">
             </div>
             <div>
                 <label for="tel2">📱 Tel  (Contato):</label>
-                <input type="text" id="tel2">
+                <input type="tel" id="tel2" inputmode="numeric" autocomplete="tel">
             </div>
         </div>
 
         <label for="email">📧 Email:</label>
-        <input type="email" id="email" required>
+        <input type="email" id="email" required autocomplete="email">
 
         <label for="vencimento">🧾 Data de Vencimento:</label>
         <select id="vencimento" required>
